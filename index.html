@@ -2864,6 +2864,51 @@ body{
   if(typeof renderHub==='function')renderHub();
 })();
 </script>
+
+<!-- === V26 GUILD PRIDE ACTIVE LOCK === -->
+<style id="v26-guild-pride-active-lock">
+  .phase-header-links a[href="phase-1.html"],
+  .phase-nav a[href="phase-1.html"]{border-color:rgba(240,208,96,.72)!important;background:rgba(240,208,96,.14)!important;color:#fff1a8!important;box-shadow:0 0 18px rgba(240,208,96,.16)!important;}
+  .phase-header-links a[href="phase-2.html"],.phase-header-links a[href="phase-3.html"],
+  .phase-nav a[href="phase-2.html"],.phase-nav a[href="phase-3.html"]{border-color:rgba(255,255,255,.14)!important;background:rgba(255,255,255,.055)!important;color:#bbb6df!important;box-shadow:none!important;}
+</style>
+<script id="v26-guild-pride-active-lock-script">
+(function(){
+  var lockedPhases=[
+    {id:1,name:'3 - 14 Jul',phaseName:'Guild Pride',status:'ACTIVE',desc:'Guild lore submissions and top guild rankings.',url:'phase-1.html'},
+    {id:2,name:'15 - 24 Jul',phaseName:'Dungeon Pride',status:'UPCOMING',desc:'Dungeon clear ranking by nation and speed.',url:'phase-2.html'},
+    {id:3,name:'25 Jul - 5 Aug',phaseName:'Grinding Pride',status:'UPCOMING',desc:'Grinding score challenge and final rankings.',url:'phase-3.html'}
+  ];
+  function forceGuildPride(){
+    if(window.CONFIG){
+      CONFIG.currentPhaseUrl='phase-1.html';
+      CONFIG.phases=lockedPhases.map(function(p){return Object.assign({},p);});
+    }
+    document.querySelectorAll('.phase-header-links a,.phase-nav a').forEach(function(a){
+      var href=a.getAttribute('href')||'';
+      if(href.indexOf('phase-1.html')>-1){a.setAttribute('aria-current','true');a.classList.add('active','current');}
+      else {a.removeAttribute('aria-current');a.classList.remove('active','current');}
+    });
+    if(typeof window.renderHub==='function') window.renderHub();
+    var today=document.getElementById('road-today');
+    if(today) today.textContent='Guild Pride is the current active campaign phase.';
+    var spotlight=document.getElementById('spotlight');
+    if(spotlight && !/Guild Pride/i.test(spotlight.textContent||'') && typeof window.renderHub==='function') window.renderHub();
+  }
+  var previousLoad=window.loadLiveData;
+  if(typeof previousLoad==='function'){
+    window.loadLiveData=function(){
+      var result=previousLoad.apply(this,arguments);
+      setTimeout(forceGuildPride,120);
+      return result;
+    };
+  }
+  forceGuildPride();
+  setTimeout(forceGuildPride,400);
+  setTimeout(forceGuildPride,1400);
+  setInterval(forceGuildPride,15000);
+})();
+</script>
 </body>
 </html>
 
