@@ -472,8 +472,8 @@ body::after{background:
   <nav id="site-nav" aria-label="Campaign navigation">
     <div class="nav-brand" aria-label="CABAL PRIDE brand"><a class="nav-brand-logo" href="index.html" aria-label="CABAL PRIDE home"><img src="cabal-pride-logo.png" alt="CABAL PRIDE"></a><span class="combo-nav-logo" aria-label="Combo Interactive"><img src="Combo-Logo-Horizontal-White.png" alt="Combo Interactive"></span></div>
     <div class="phase-header-links" aria-label="Campaign phases">
-      <a href="phase-1.html" aria-current="true">Guild Pride</a>
-      <a href="phase-2.html">Dungeon Pride</a>
+      <a href="phase-1.html">Guild Pride</a>
+      <a href="phase-2.html" aria-current="true">Dungeon Pride</a>
       <a href="phase-3.html">Grinding Pride</a><a class="nation-nav-button" href="https://docs.google.com/forms/d/e/1FAIpQLSeCJ3L6Z3H5TBYuj9LtXuqViTCs0BRfr9EqIqQFpmCwT-nYHg/viewform" target="_blank" rel="noopener" aria-label="Choose your nation"><img src="Register-Button.png" alt="Choose Your Nation"></a>
     </div>
   </nav>
@@ -2906,6 +2906,46 @@ body{
   setInterval(forceDungeonPride,15000);
 })();
 </script>
+
+
+<!-- === V28 PHASE 2 ACTIVE FINAL LOCK === -->
+<style id="v28-phase2-active-final-lock">
+  .phase-header-links a[href="phase-2.html"],.phase-nav a[href="phase-2.html"],.hub-links a[href="phase-2.html"]{border-color:rgba(240,208,96,.72)!important;background:rgba(240,208,96,.14)!important;color:#fff1a8!important;box-shadow:0 0 18px rgba(240,208,96,.18)!important;}
+  .phase-header-links a[href="phase-1.html"],.phase-header-links a[href="phase-3.html"],.phase-nav a[href="phase-1.html"],.phase-nav a[href="phase-3.html"],.hub-links a[href="index.html"],.hub-links a[href="phase-3.html"]{border-color:rgba(255,255,255,.14)!important;background:rgba(255,255,255,.055)!important;color:#bbb6df!important;box-shadow:none!important;}
+</style>
+<script id="v28-phase2-active-final-lock-script">
+(function(){
+  var phase2Locked=[
+    {id:1,name:'3 - 14 Jul',phaseName:'Guild Pride',status:'DONE',desc:'Guild lore submissions and top guild rankings.',url:'phase-1.html'},
+    {id:2,name:'15 - 24 Jul',phaseName:'Dungeon Pride',status:'ACTIVE',desc:'Dungeon clear ranking by nation and speed.',url:'phase-2.html'},
+    {id:3,name:'25 Jul - 5 Aug',phaseName:'Grinding Pride',status:'UPCOMING',desc:'Grinding score challenge and final rankings.',url:'phase-3.html'}
+  ];
+  function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function isActive(p){return String(p.status||'').toUpperCase()==='ACTIVE';}
+  function statusClass(p){return isActive(p)?'is-active':String(p.status||'').toUpperCase()==='DONE'?'is-done':'is-upcoming';}
+  function syncConfig(){if(window.CONFIG){CONFIG.currentPhaseUrl='phase-2.html';CONFIG.phases=phase2Locked.map(function(p){return Object.assign({},p);});}}
+  function syncHeader(){document.querySelectorAll('.phase-header-links a,.phase-nav a,.hub-links a').forEach(function(a){var href=(a.getAttribute('href')||'').toLowerCase();if(href.indexOf('phase-2.html')>-1){a.setAttribute('aria-current','true');a.classList.add('active','current');}else if(href.indexOf('phase-1.html')>-1||href==='index.html'||href.indexOf('phase-3.html')>-1){a.removeAttribute('aria-current');a.classList.remove('active','current');}});}
+  function renderLockedTimeline(){
+    var grid=document.getElementById('phase-grid');
+    if(grid && grid.getAttribute('data-phase-lock')!=='phase-2'){
+      grid.setAttribute('data-phase-lock','phase-2');
+      grid.innerHTML=phase2Locked.map(function(phase,i){return '<a class="phase-card '+(isActive(phase)?'active':'')+'" href="'+esc(phase.url)+'" aria-label="'+esc(phase.phaseName)+' '+esc(phase.status)+'"><span class="phase-tag">P'+(phase.id||i+1)+'</span><div class="phase-head"><h2 class="phase-title">'+esc(phase.phaseName)+'</h2><span class="phase-badge '+statusClass(phase)+'">'+esc(phase.status)+'</span></div><p class="phase-date">'+esc(phase.name)+'</p><p class="phase-desc">'+esc(phase.desc)+'</p><span class="phase-link">Learn More</span></a>';}).join('');
+    }
+    var road=document.getElementById('road-track');
+    if(road && road.getAttribute('data-phase-lock')!=='phase-2'){
+      road.setAttribute('data-phase-lock','phase-2');
+      road.innerHTML=phase2Locked.map(function(phase,i){var done=i<1, active=isActive(phase);return '<div class="road-node '+statusClass(phase)+'"><span class="road-dot">P'+(phase.id||i+1)+'</span><div class="road-info"><strong>'+esc(phase.phaseName)+'</strong><small>'+esc(phase.name)+'</small><span class="road-status">'+esc(phase.status)+'</span></div></div>'+(i<phase2Locked.length-1?'<span class="road-line '+(done?'done':active?'active-progress':'')+'"></span>':'');}).join('');
+    }
+    var today=document.getElementById('road-today');if(today) today.innerHTML='<span class="road-highlight">Dungeon Pride</span> is the current active campaign phase.';
+    var spot=document.getElementById('spotlight');if(spot && spot.getAttribute('data-phase-lock')!=='phase-2'){var cur=phase2Locked[1];spot.setAttribute('data-phase-lock','phase-2');spot.innerHTML='<p class="spot-kicker">Current Phase Spotlight</p><h2 class="spot-title">'+esc(cur.phaseName)+'</h2><p class="spot-meta">'+esc(cur.name)+' &nbsp;|&nbsp; <span>'+esc(cur.status)+'</span></p><p class="spot-desc">'+esc(cur.desc)+'</p><a class="spot-cta" href="'+esc(cur.url)+'">Learn More</a>';}
+    var more=document.querySelector('.learn-more');if(more)more.href='phase-2.html';
+  }
+  function lock(){syncConfig();syncHeader();renderLockedTimeline();}
+  ['renderHub','updateToday'].forEach(function(name){if(typeof window[name]==='function'&&!window[name].__phase2FinalLock){var original=window[name];window[name]=function(){var result=original.apply(this,arguments);document.querySelectorAll('[data-phase-lock="phase-2"]').forEach(function(el){el.removeAttribute('data-phase-lock');});setTimeout(lock,0);return result;};window[name].__phase2FinalLock=true;}});
+  window.__forcePhase2Active=lock;lock();document.addEventListener('DOMContentLoaded',lock);window.addEventListener('load',lock);setTimeout(lock,80);setTimeout(lock,400);setTimeout(lock,1200);setTimeout(lock,2500);setTimeout(lock,5000);
+})();
+</script>
+
 </body>
 </html>
 
